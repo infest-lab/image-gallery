@@ -1,5 +1,7 @@
 <app-header-navigation></app-header-navigation>
 <div class="admin-layout-container">
+  <h1>{{album?.name}}</h1>
+  <p>{{album?.description}}</p>
   <nav>
     <p-button class="action" i18n-label label="Add images" (click)="libraryFilesSelector.open()"></p-button>
     <p-button class="action" [disabled]="!selected.length" i18n-label label="Delete images" (click)="selected.length && removeImages(selected)"></p-button>
@@ -7,6 +9,7 @@
     <p-button class="action" i18n-label label="Delete album" (click)="removeAlbum(album.id)"></p-button>
     <p-button class="action" [disabled]="!selected.length" i18n-label label="Create thumbnails" (click)="selected.length && createThumbnails(selected)"></p-button>
     <p-button class="action" [disabled]="!reordered" i18n-label label="Update order" (click)="setImagesOrder()"></p-button>
+    <p-button class="action" i18n-label label="Update titles" (click)="updateTitles()"></p-button>
   </nav>
   <p-table [value]="images" dataKey="url" [(selection)]="selected" (onRowReorder)="onRowReorder()">
     <ng-template pTemplate="header">
@@ -33,8 +36,20 @@
             <li><span class="label" i18n>Resolution:</span> {{image.width}} x {{image.height}}</li>
             <li><span class="label" i18n>Url:</span> {{image.url}}</li>
             <li><span class="label" i18n>Thumbnail url:</span> {{image.thumbUrl}}</li>
-            <li *ngIf="image.title"><span class="label" i18n>Title:</span> {{image.title}}</li>
-          </ul>
+            <!-- <li *ngIf="image.title"><span class="label" i18n>Title:</span> {{image.title}}</li> -->
+            <!-- <li>
+              <div app-property-presenter [key]="image.filename" [(value)]="image.title" [formGroup]="imagesForm"
+                i18n-name name="Title" type="string"
+                i18n-description description="Title of image, click to update."
+              ></div>
+            </li> -->
+          </ul>          
+          <table class="update-title">
+            <tr app-property-presenter [key]="image.filename" [(value)]="image.title" [formGroup]="imagesForm"
+                i18n-name name="Title" type="string"
+                i18n-description description="Title of image, click to update."
+              ></tr>
+          </table>
         </td>
         <td class="actions">
           <i class="pi pi-bars" pReorderableRowHandle></i>

@@ -5,9 +5,13 @@ declare namespace Definitions {
          */
         id: string;
         /**
-         * albums
+         * album name
          */
         name: string;
+        /**
+         * album description
+         */
+        description?: string;
         /**
          * unique link for album
          */
@@ -38,6 +42,10 @@ declare namespace Definitions {
          * album name
          */
         name: string;
+        /**
+         * album description
+         */
+        description?: string;
         /**
          * album permalink
          */

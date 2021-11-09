@@ -10,6 +10,7 @@ function getAlbums(req, res) {
       id: album._id,
       permalink: album.permalink,
       name: album.name,
+      description: album.description,
       date: album.date,
       lastModified: album.lastModified,
       createDate: album.createDate,
@@ -21,6 +22,7 @@ function getAlbums(req, res) {
 function createAlbum(req, res) {
   albums.createAlbum({
     name: req.body.name,
+    description: req.body.description,
     permalink: req.body.permalink,
     date: req.body.date
   }).then(() => res.status(201).send());
@@ -30,6 +32,7 @@ function updateAlbum(req, res) {
   const id = req.swagger.params.id.value;
   albums.updateAlbum(id, {
     name: req.body.name,
+    description: req.body.description,
     permalink: req.body.permalink,
     date: req.body.date})
   .then(() => res.status(200).send())
@@ -52,6 +55,15 @@ function addImages(req, res) {
 
 function removeImages(req, res) {
   albums.removeImages(req.swagger.params.id.value, req.body)
+    .then(() => res.status(201).send())
+    .catch(e => {
+      console.log(e);
+      res.status(400).send();
+    });
+}
+
+function updateTitles(req, res) {
+  albums.updateTitles(req.swagger.params.id.value, req.body)
     .then(() => res.status(201).send())
     .catch(e => {
       console.log(e);
@@ -139,4 +151,5 @@ module.exports = {
   removeImages,
   downloadImage,
   setImagesOrder,
+  updateTitles
 };

@@ -38,7 +38,9 @@
               "node_modules/primeicons/primeicons.css",
               "src/styles.scss"
             ],
-            "localize": ["en"]
+            "localize": [
+              "en"
+            ]
           },
           "configurations": {
             "production": {
@@ -150,5 +152,8 @@
     "@schematics/angular:directive": {
       "prefix": "app"
     }
+  },
+  "cli": {
+    "analytics": false
   }
 }

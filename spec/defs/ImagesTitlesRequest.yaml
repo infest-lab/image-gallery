@@ -1,0 +1,5 @@
+title: ImagesTitlesRequest
+type: array
+description: list of image titles to update
+items:
+  $ref: Image.yaml

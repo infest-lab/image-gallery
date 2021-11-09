@@ -41,9 +41,15 @@ export class AlbumsService {
     ).pipe(this.refreshAlbums());
   }
 
-  createAlbum(name: string, permalink: string, date: string): Observable<any> {
+  updateTitles(albumId: string, images: Image[]): Observable<void> {
     return spinnable(
-      this.httpClient.post<any>('/api/albums', { name, permalink, date })
+      this.httpClient.post<void>(`/api/albums/${albumId}/images/titles`, images)
+    ).pipe(this.refreshAlbums());
+  }
+
+  createAlbum(name: string, description:string, permalink: string, date: string): Observable<any> {
+    return spinnable(
+      this.httpClient.post<any>('/api/albums', { name, description, permalink, date })
     ).pipe(this.refreshAlbums());
   }
 

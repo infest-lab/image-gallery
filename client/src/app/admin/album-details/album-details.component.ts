@@ -5,6 +5,8 @@ import { ConfirmationService } from 'primeng/api';
 import { AlbumCreateEvent } from '../album-create/album-create.component';
 import { LibraryFilesSelectorComponent } from '../library-files-selector/library-files-selector.component';
 import { ThumbnailsService } from '../services/thumbnails.service';
+import { FormGroup } from '@angular/forms';
+
 import Image = Definitions.Image;
 import Album = Definitions.Album;
 import LibraryFile = Definitions.LibraryFile;
@@ -23,6 +25,8 @@ export class AlbumDetailsComponent {
 
   reordered: boolean = false;
   orderHash: string;
+
+  imagesForm: FormGroup = new FormGroup({});
 
   @ViewChild('libraryFilesSelector', { static: true })
   libraryFilesSelector: LibraryFilesSelectorComponent;
@@ -77,6 +81,17 @@ export class AlbumDetailsComponent {
   createThumbnails(images: Image[]): void {
     this.thumbnailsService.createThumbnails(images.map(image => image.url))
       .pipe(this.albumsService.refreshAlbums())
+      .subscribe(() => {
+        this.selected = [];
+        this.router.navigated = false;
+        this.router.navigate([this.router.url]);
+      });
+  }
+
+  updateTitles(): void {
+    console.log(this.images)
+    // console.log(this.imagesForm.value)
+    this.albumsService.updateTitles(this.album.id, this.images)
       .subscribe(() => {
         this.selected = [];
         this.router.navigated = false;

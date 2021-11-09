@@ -3,9 +3,10 @@ const library = require('./library');
 const Promise = require('bluebird');
 const UniqueFilenames = require('../lib/unique-filenames');
 
-function createAlbum({name, permalink, date, createDate = new Date().toISOString()}) {
+function createAlbum({name, description, permalink, date, createDate = new Date().toISOString()}) {
   return db.insertAlbum({
     name: name,
+    description: description,
     permalink: permalink,
     date: date,
     lastModified: createDate,
@@ -20,11 +21,19 @@ function updateAlbum(id, {name, permalink, date}) {
       {...album, name, permalink, date}));
 }
 
+function generateTitle(filename){
+  let pos = filename.lastIndexOf(".");
+  filename = filename.substr(0, pos < 0 ? filename.length : pos) + "";
+  filename = filename.replace(/[&\/\\#,+()\-$~%.'":*?<>{}]/g,' ');
+  return filename;
+}
+
 function addImages(id, paths) {
   return db.findAlbum({ _id: id })
     .then(album => Promise.map(paths, path => library.getImageDetails(path), { concurrency: 5 })
         .map(imageDetails => ({
           filename: imageDetails.filename,
+          title: generateTitle(imageDetails.filename),
           url: imageDetails.path,
           width: imageDetails.width,
           height: imageDetails.height
@@ -49,6 +58,23 @@ function addImages(id, paths) {
         .then(images => db.updateAlbum({_id: album._id}, {
           ...album, images, lastModified: new Date().toISOString()
         })));
+}
+
+function updateTitles(id, imageTitles) {
+  return db.findAlbum({ _id: id })
+    .then(album => {
+      const images = album.images.reduce((newList, image) => {
+        const found = imageTitles.filter((img) => {
+          return img.filename == image.filename
+        })
+        if (found) {
+          image.title = found[0].title  
+        }
+        newList.push(image);
+        return newList;
+      }, []);
+      return db.updateAlbum({_id: album._id}, {...album, images});
+    });
 }
 
 function removeImages(id, filenames) {
@@ -95,5 +121,5 @@ function setImagesOrder(id, filenames) {
 }
 
 module.exports = {
-  createAlbum, updateAlbum, removeAlbum, addImages, removeImages, setImagesOrder
+  createAlbum, updateAlbum, removeAlbum, addImages, removeImages, setImagesOrder, updateTitles
 }
