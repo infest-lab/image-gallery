@@ -121,5 +121,5 @@ function setImagesOrder(id, filenames) {
 }
 
 module.exports = {
-  createAlbum, updateAlbum, removeAlbum, addImages, removeImages, setImagesOrder, updateTitles
+  createAlbum, updateAlbum, removeAlbum, addImages, removeImages, setImagesOrder, updateTitles, generateTitle
 }

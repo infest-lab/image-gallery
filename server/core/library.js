@@ -34,7 +34,9 @@ function getFiles(parentDir) {
 function createDirectory(parentDir = '', name) {
   if (isValidPath(path.join(parentDir, name))) {
     const absoluteDir = path.join(config.libraryDir, parentDir || '', name);
-    return mkDir(absoluteDir);
+    return mkDir(absoluteDir).then(()=>{
+      return Promise.resolve(name)
+    });
   } else {
     return Promise.reject('Invalid path');
   }
